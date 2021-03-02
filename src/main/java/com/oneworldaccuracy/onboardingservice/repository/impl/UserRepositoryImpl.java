@@ -46,7 +46,7 @@ public class UserRepositoryImpl {
 
             user.setRole(Roles.USER);
             user.setDateRegistered(LocalDateTime.now());
-\            user.setVerified(false);
+            user.setVerified(false);
             user.setStatus(Status.REGISTERED);
 
             userRepository.save(user);

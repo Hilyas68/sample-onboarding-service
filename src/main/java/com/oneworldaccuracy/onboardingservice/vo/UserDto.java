@@ -29,6 +29,7 @@ public class UserDto {
     private boolean verified;
     private boolean deleted;
     private Status status;
+    private String verificationCode;
 
     public UserDto(String title, String firstName, String lastName, String email, String mobile, Roles role, LocalDateTime dateRegistered, LocalDateTime dateVerified,
                    LocalDateTime dateDeactivated, boolean verified, Status status, boolean deleted) {

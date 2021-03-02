@@ -9,6 +9,7 @@ public class Constants {
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String EMAIL_EXIST = "Email already exist";
     public static final String REGISTRATION_SUCCESS = "Registration successful, kindly check your mail to verify account";
+    public static final String USER_NOT_FOUND = "User not found";
 
     private Constants() {
     }
