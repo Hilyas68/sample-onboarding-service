@@ -9,6 +9,16 @@ public class UpdateRequest {
     private String email;
     private String mobile;
 
+    public UpdateRequest(String title, String firstName, String lastName, String email, String mobile) {
+        this.title = title;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.mobile = mobile;
+    }
+
+    public UpdateRequest() {
+    }
 
     public String getTitle() {
         return title;

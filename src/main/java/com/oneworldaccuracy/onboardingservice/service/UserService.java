@@ -65,7 +65,7 @@ public class UserService {
 
         } catch (Exception ex) {
             logger.error("Error occurred - registerUser : ", ex);
-            return new ErrorResponse(ex.getMessage());
+            return new ErrorResponse(Constants.ERROR_PROCESSING);
         }
     }
 
@@ -115,6 +115,10 @@ public class UserService {
     public ServiceResponse deactivateUser(long id) {
         try {
             User user = userRepository.findById(id).orElse(null);
+
+            if (user.isDeleted()) {
+                return new ErrorResponse(Constants.DEACTIVATED_MESSAGE);
+            }
 
             if (user != null) {
                 repository.deactivateUser(id);

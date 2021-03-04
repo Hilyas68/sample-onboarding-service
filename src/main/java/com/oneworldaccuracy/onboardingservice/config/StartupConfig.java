@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.logging.Level;
@@ -18,6 +19,9 @@ public class StartupConfig {
 
     @Autowired
     UserRepository repository;
+    @Autowired
+    PasswordEncoder encoder;
+
 
     private static final Logger logger = Logger.getLogger(StartupConfig.class.getName());
 
@@ -27,7 +31,7 @@ public class StartupConfig {
         try {
             if (!repository.existsByEmail("admin@oneworldaccuracy.com")) {
 
-                User user = new User(0L, "MR", "Hassan", "LastName", "admin@oneworldaccuracy.com", "08022318882", "", Roles.ADMIN, LocalDateTime.now(),
+                User user = new User(0L, "MR", "Hassan", "LastName", "admin@oneworldaccuracy.com", "08022318882", encoder.encode("admin@1234"), Roles.ADMIN, LocalDateTime.now(),
                         null, null, true, false, Status.VERIFIED, null);
 
                 repository.save(user);

@@ -43,6 +43,7 @@ public class UserRepositoryImpl {
             user.setTitle(userDto.getTitle());
             user.setEmail(userDto.getEmail());
             user.setMobile(userDto.getMobile());
+            user.setPassword(userDto.getPassword());
 
             user.setRole(Roles.USER);
             user.setDateRegistered(LocalDateTime.now());
