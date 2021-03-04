@@ -1,6 +1,6 @@
 # Simple-Onboarding-Service
 
-#This is a simple on-boarding app features include:
+# This is a simple on-boarding app features include:
 
 - Register user
 - Verify user's email address
