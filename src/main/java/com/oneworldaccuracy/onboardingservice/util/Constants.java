@@ -15,6 +15,7 @@ public class Constants {
     public static final String WELCOME_SUBJECT = "Welcome Onboard";
     public static final String OFF_BORDING = "Deactivation";
     public static final String DEACTIVATED_MESSAGE = "Sorry User is deactivated on the platform";
+    public static final String REGISTRATION_SUCCESS_MAIL_FAILED = "Registration Successful,mail verification failed";
 
 
     private Constants() {
