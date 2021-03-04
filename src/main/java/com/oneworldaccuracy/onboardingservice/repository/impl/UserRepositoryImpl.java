@@ -26,12 +26,14 @@ public class UserRepositoryImpl {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         List<User> users = userRepository.findAll(pageable).toList();
-        users.forEach(u -> {
-            userDto.add(new UserDto(
-                    u.getTitle(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getMobile(), u.getRole(), u.getDateRegistered().toLocalDate(), u.getDateVerified().toLocalDate(),
-                    u.getDateDeactivated().toLocalDate(), u.isVerified(), u.getStatus(), u.isDeleted()
-            ));
-        });
+        if (users.size() > 0) {
+            users.forEach(u -> {
+                userDto.add(new UserDto(
+                        u.getTitle(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getMobile(), u.getRole(), u.getDateRegistered().toLocalDate(), u.getDateVerified().toLocalDate(),
+                        u.getDateDeactivated().toLocalDate(), u.isVerified(), u.getStatus(), u.isDeleted()
+                ));
+            });
+        }
         return userDto;
     }
 

@@ -65,7 +65,7 @@ public class UserService {
 
         } catch (Exception ex) {
             logger.error("Error occurred - registerUser : ", ex);
-            return new ErrorResponse(Constants.ERROR_PROCESSING);
+            return new ErrorResponse("");
         }
     }
 
