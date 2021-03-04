@@ -9,4 +9,4 @@ This is a simple on-boarding app features include:
 - Deacivate User
 - Get all registered users (supports pagination)
 
- Check out the API doc [SWAGGER API DOC](http://localhost:8020/onboarding-service/api/swagger-ui.html#)
+ Check out the API doc [SWAGGER API DOC](https://sample-on-boarding-service.herokuapp.com/onboarding-service/api/swagger-ui.html#)
