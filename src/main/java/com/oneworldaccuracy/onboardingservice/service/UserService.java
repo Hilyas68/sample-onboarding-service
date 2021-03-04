@@ -6,6 +6,7 @@ import com.oneworldaccuracy.onboardingservice.repository.impl.UserRepositoryImpl
 import com.oneworldaccuracy.onboardingservice.util.Constants;
 import com.oneworldaccuracy.onboardingservice.util.Utils;
 import com.oneworldaccuracy.onboardingservice.vo.UserDto;
+import com.oneworldaccuracy.onboardingservice.vo.enums.Status;
 import com.oneworldaccuracy.onboardingservice.vo.request.RegisterRequest;
 import com.oneworldaccuracy.onboardingservice.vo.request.UpdateRequest;
 import com.oneworldaccuracy.onboardingservice.vo.response.ErrorResponse;
@@ -14,10 +15,10 @@ import com.oneworldaccuracy.onboardingservice.vo.response.SuccessResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -31,11 +32,11 @@ public class UserService {
     @Autowired
     PasswordEncoder encoder;
     @Autowired
-    private JavaMailSender mailSender;
+    private EmailService emailService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public ServiceResponse registerUser(RegisterRequest request) {
+    public ServiceResponse registerUser(RegisterRequest request, HttpServletRequest req) {
 
         try {
             if (repository.emailExist(request.getEmail())) {
@@ -43,22 +44,28 @@ public class UserService {
             }
 
             UserDto user = new UserDto();
+            user.setTitle(request.getTitle());
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
             user.setEmail(request.getEmail());
             user.setMobile(request.getMobile());
             user.setPassword(encoder.encode(request.getPassword()));
-            user.setVerificationCode(Utils.generateVerificationCode());
+            String verificationCode = Utils.generateVerificationCode();
+            user.setVerificationCode(verificationCode);
 
             repository.addUser(user);
+            String verifyUrl = Utils.getUrl(req).concat("/verify?code=").concat(verificationCode);
 
-            //TODO: Send on-boarding mail
+            String content = Utils.verificationEmailTemplate().replace("#name#", request.getFirstName()).replace("#url#", verifyUrl);
+            ;
 
+
+            emailService.sendEmail(Constants.SENDER_EMAIL, request.getEmail(), Constants.SENDER_NAME, Constants.VERIFY_SUBJECT, content);
             return new SuccessResponse(Constants.REGISTRATION_SUCCESS, null);
 
         } catch (Exception ex) {
             logger.error("Error occurred - registerUser : ", ex);
-            return new ErrorResponse(Constants.ERROR_PROCESSING);
+            return new ErrorResponse(ex.getMessage());
         }
     }
 
@@ -79,6 +86,11 @@ public class UserService {
         try {
             User user = userRepository.findById(id).orElse(null);
 
+            if (user.isDeleted()) {
+                return new ErrorResponse(Constants.DEACTIVATED_MESSAGE);
+            }
+
+
             if (user != null) {
                 user.setFirstName(request.getFirstName());
                 user.setLastName(request.getLastName());
@@ -88,7 +100,7 @@ public class UserService {
 
                 userRepository.save(user);
 
-                return new SuccessResponse(Constants.OPERATION_SUCCESS, user);
+                return new SuccessResponse(Constants.OPERATION_SUCCESS, null);
             } else {
                 return new ErrorResponse(Constants.USER_NOT_FOUND);
             }
@@ -107,9 +119,35 @@ public class UserService {
             if (user != null) {
                 repository.deactivateUser(id);
 
-                return new SuccessResponse(Constants.OPERATION_SUCCESS, user);
+                String content = Utils.welcomeOnboardEmailTemplate().replace("#name#", user.getFirstName());
+
+                emailService.sendEmail(Constants.SENDER_EMAIL, user.getEmail(), Constants.SENDER_NAME, Constants.OFF_BORDING, content);
+                return new SuccessResponse(Constants.OPERATION_SUCCESS, null);
             } else {
                 return new ErrorResponse(Constants.USER_NOT_FOUND);
+            }
+
+        } catch (Exception ex) {
+            logger.error("Error occurred - deactivateUser : ", ex);
+            return new ErrorResponse(Constants.ERROR_PROCESSING);
+        }
+    }
+
+    public ServiceResponse verifyUser(String verificationCode) {
+        try {
+            User user = userRepository.findByVerificationCode(verificationCode);
+
+            if (user == null || user.isVerified()) {
+                return new ErrorResponse(Constants.USER_ALREADY_VERIFIED);
+            } else {
+                user.setVerified(true);
+                user.setVerificationCode(null);
+                user.setStatus(Status.VERIFIED);
+                userRepository.save(user);
+                String content = Utils.welcomeOnboardEmailTemplate().replace("#name#", user.getFirstName());
+                emailService.sendEmail(Constants.SENDER_EMAIL, user.getEmail(), Constants.SENDER_NAME, Constants.WELCOME_SUBJECT, content);
+
+                return new SuccessResponse(Constants.VERIFED_SUCCESS, null);
             }
 
         } catch (Exception ex) {

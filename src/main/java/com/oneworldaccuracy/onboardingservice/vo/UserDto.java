@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,16 +24,16 @@ public class UserDto {
     private String mobile;
     private String password;
     private Roles role;
-    private LocalDateTime dateRegistered;
-    private LocalDateTime dateVerified;
-    private LocalDateTime dateDeactivated;
+    private LocalDate dateRegistered;
+    private LocalDate dateVerified;
+    private LocalDate dateDeactivated;
     private boolean verified;
     private boolean deleted;
     private Status status;
     private String verificationCode;
 
-    public UserDto(String title, String firstName, String lastName, String email, String mobile, Roles role, LocalDateTime dateRegistered, LocalDateTime dateVerified,
-                   LocalDateTime dateDeactivated, boolean verified, Status status, boolean deleted) {
+    public UserDto(String title, String firstName, String lastName, String email, String mobile, Roles role, LocalDate dateRegistered, LocalDate dateVerified,
+                   LocalDate dateDeactivated, boolean verified, Status status, boolean deleted) {
         this.title = title;
         this.firstName = firstName;
         this.lastName = lastName;

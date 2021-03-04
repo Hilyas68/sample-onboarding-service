@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 public class Utils {
 
@@ -15,23 +16,33 @@ public class Utils {
         return RandomString.make(64);
     }
 
-    public static void sendOnBoardingEmail() {
-        String toAddress = user.getEmail();
-        String fromAddress = "onboarding@onewordaccuracy.com";
-        String senderName = "One World Accuracy";
-        String subject = "Email Verification";
-        String content = "Dear #name#,<br>"
+    public static String verificationEmailTemplate() {
+
+        return "Dear #name#,<br>"
                 + "Kindly verify your email to complete your registration:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">verify</a></h3>"
+                + "<h3><a href=\"#url#\" target=\"_self\">verify</a></h3>"
                 + "Thank you,<br>"
                 + "One World Accuracy.";
+    }
 
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+    public static String welcomeOnboardEmailTemplate() {
 
-        helper.setFrom(fromAddress, senderName);
-        helper.setTo(toAddress);
-        helper.setSubject(subject);
+        return "Dear #name#,<br>"
+                + "Welcome onboard, thank you for completing your registration on our platform.<br>"
+                + "Thank you,<br>"
+                + "One World Accuracy.";
+    }
 
+    public static String offBoardingEmailTemplate() {
+
+        return "Dear #name#,<br>"
+                + "Sorry we're letting you go<br>"
+                + "Thank you,<br>"
+                + "One World Accuracy.";
+    }
+
+    public static String getUrl(HttpServletRequest request) {
+        String url = request.getRequestURL().toString();
+        return url.replace(request.getServletPath(), "");
     }
 }

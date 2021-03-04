@@ -58,11 +58,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
                 .select()
-                .apis(basePackage("com.wayapaychat.statementservice"))
+                .apis(basePackage("com.oneworldaccuracy.onboardingservice"))
                 .paths(PathSelectors.any())
                 .build().pathMapping("/")
                 .apiInfo(new ApiInfo(
-                        "Statement Service",
+                        "On-boarding Service",
                         "","","",new Contact("","",""),"","",
                         Collections.emptyList()));
     }

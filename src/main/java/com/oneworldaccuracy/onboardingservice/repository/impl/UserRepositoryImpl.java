@@ -28,8 +28,8 @@ public class UserRepositoryImpl {
         List<User> users = userRepository.findAll(pageable).toList();
         users.forEach(u -> {
             userDto.add(new UserDto(
-                    u.getTitle(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getMobile(), u.getRole(), u.getDateRegistered(), u.getDateVerified(),
-                    u.getDateDeactivated(), u.isVerified(), u.getStatus(), u.isDeleted()
+                    u.getTitle(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getMobile(), u.getRole(), u.getDateRegistered().toLocalDate(), u.getDateVerified().toLocalDate(),
+                    u.getDateDeactivated().toLocalDate(), u.isVerified(), u.getStatus(), u.isDeleted()
             ));
         });
         return userDto;
@@ -48,6 +48,7 @@ public class UserRepositoryImpl {
             user.setDateRegistered(LocalDateTime.now());
             user.setVerified(false);
             user.setStatus(Status.REGISTERED);
+            user.setVerificationCode(userDto.getVerificationCode());
 
             userRepository.save(user);
         }
@@ -74,12 +75,13 @@ public class UserRepositoryImpl {
             return;
         }
 
-        user.setDeleted(false);
+        user.setDeleted(true);
+        user.setStatus(Status.DEACTIVATED);
         userRepository.save(user);
 
     }
 
-    public boolean emailExist(String email){
+    public boolean emailExist(String email) {
         return userRepository.existsByEmail(email);
     }
 }

@@ -35,5 +35,7 @@ public class User {
     private boolean verified;
     private boolean deleted;
     private Status status;
+    private String verificationCode;
+
 
 }

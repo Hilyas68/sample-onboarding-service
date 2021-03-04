@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -23,8 +24,8 @@ public class OnBoardingOperation {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Async
-    public CompletableFuture<ServiceResponse> registerUser(@RequestBody RegisterRequest request) {
-        return CompletableFuture.completedFuture(service.registerUser(request));
+    public CompletableFuture<ServiceResponse> registerUser(@RequestBody RegisterRequest request, HttpServletRequest req) {
+        return CompletableFuture.completedFuture(service.registerUser(request, req));
     }
 
     @GetMapping(
@@ -56,6 +57,15 @@ public class OnBoardingOperation {
     @Async
     public CompletableFuture<ServiceResponse> deactivateUser(@PathVariable("id") long userId) {
         return CompletableFuture.completedFuture(service.deactivateUser(userId));
+    }
+
+    @GetMapping(
+            value = "/verify",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Async
+    public CompletableFuture<ServiceResponse> verifyEmail(@RequestParam("code") String code) {
+        return CompletableFuture.completedFuture(service.verifyUser(code));
     }
 
 }
