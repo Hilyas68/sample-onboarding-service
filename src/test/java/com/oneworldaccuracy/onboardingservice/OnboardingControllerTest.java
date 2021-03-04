@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class OnboardingControllerTest {
     @Test
     public void registerUser() throws Exception {
 
-        UserDto dto = new UserDto(0L, "MR", "Hassan", "LastName", "admin@oneworldaccuracy.com", "08022318882", encoder.encode("user@1234"), Roles.ADMIN, LocalDate.now(),
+        UserDto dto = new UserDto(0L, "MR", "Hassan", "LastName", "admin@oneworldaccuracy.com", "08022318882", encoder.encode("user@1234"), Roles.ADMIN, LocalDateTime.now(),
                 null, null, true, false, Status.VERIFIED, null);
         RegisterRequest request = new RegisterRequest("MR", "Hassan", "LastName", "xyz@gmail.com", "08022318882", "user@1234");
         when(service.registerUser(request, req)).thenReturn(new SuccessResponse(Constants.OPERATION_SUCCESS, null));
@@ -67,7 +68,7 @@ public class OnboardingControllerTest {
     public void getRegisteredUsers() throws Exception {
 
         List<UserDto> users = new ArrayList<>();
-        UserDto dto = new UserDto(8L, "MR", "Hassan", "LastName", "admin@oneworldaccuracy.com", "08022318882", encoder.encode("user@1234"), Roles.ADMIN, LocalDate.now(),
+        UserDto dto = new UserDto(8L, "MR", "Hassan", "LastName", "admin@oneworldaccuracy.com", "08022318882", encoder.encode("user@1234"), Roles.ADMIN, LocalDateTime.now(),
                 null, null, true, false, Status.VERIFIED, null);
         users.add(dto);
         when(service.getRegisteredUsers(1, 10)).thenReturn(new SuccessResponse(Constants.OPERATION_SUCCESS, users));
@@ -81,7 +82,7 @@ public class OnboardingControllerTest {
     @Test
     public void updateUser() throws Exception {
 
-        UserDto dto = new UserDto(8L, "MR", "Hassan", "LastName", "admin@oneworldaccuracy.com", "08022318882", encoder.encode("user@1234"), Roles.ADMIN, LocalDate.now(),
+        UserDto dto = new UserDto(8L, "MR", "Hassan", "LastName", "admin@oneworldaccuracy.com", "08022318882", encoder.encode("user@1234"), Roles.ADMIN, LocalDateTime.now(),
                 null, null, true, false, Status.VERIFIED, null);
         UpdateRequest request = new UpdateRequest("MR", "Hassan", "LastName", "xyz@gmail.com", "08022318882");
         when(service.updateUser(8L, request)).thenReturn(new SuccessResponse(Constants.OPERATION_SUCCESS, null));
